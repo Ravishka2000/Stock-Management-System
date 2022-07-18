@@ -1,0 +1,11 @@
+{% extends 'stockmgmt/base.html' %}
+
+{% block body %}
+
+    {% for instance in queryset %}
+
+        <h4>{{ instance.item_name }}, {{ instance.quantity }}</h4>
+
+    {% endfor %}
+
+{% endblock %}
