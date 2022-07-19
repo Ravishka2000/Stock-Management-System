@@ -36,3 +36,14 @@ class StockSearchForm(forms.ModelForm):
             'category': forms.TextInput(attrs={'class': 'form-control'}),
             'item_name': forms.TextInput(attrs={'class': 'form-control'}),
         }
+
+
+class StockUpdateForm(forms.ModelForm):
+    class Meta:
+        model = Stock
+        fields = ['category', 'item_name', 'quantity']
+        widgets = {
+            'category': forms.TextInput(attrs={'class': 'form-control'}),
+            'item_name': forms.TextInput(attrs={'class': 'form-control'}),
+            'quantity': forms.NumberInput(attrs={'class': 'form-control'}),
+        }
