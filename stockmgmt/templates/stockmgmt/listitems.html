@@ -2,10 +2,33 @@
 
 {% block body %}
 
-    {% for instance in queryset %}
+    <h1>List of Items</h1>
+    <br>
 
-        <h4>{{ instance.item_name }}, {{ instance.quantity }}</h4>
+    <form method="post" action="">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <input type="submit" value="Search" class="btn btn-secondary">
+    </form>
 
-    {% endfor %}
+    <table class="table table-striped table-hover">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Category</th>
+                <th>Item Name</th>
+                <th>Quantity</th>
+            </tr>
+        </thead>
+
+        {% for instance in queryset %}
+            <tr>
+                <td>{{ forloop.counter }}</td>
+                <td>{{ instance.category }}</td>
+                <td>{{ instance.item_name }}</td>
+                <td>{{ instance.quantity }}</td>
+            </tr>
+        {% endfor %}
+    </table>
 
 {% endblock %}

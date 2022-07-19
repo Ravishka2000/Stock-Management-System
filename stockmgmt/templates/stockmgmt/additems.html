@@ -2,9 +2,11 @@
 
 {% block body %}
 
-    <form method="post" action="">
+    <h1>Add Item</h1>
+
+    <form method="post" action="" class="form-control">
         {% csrf_token %}
-        {{ form }}
+        {{ form.as_p }}
         <input type="submit" value="Add">
     </form>
 
