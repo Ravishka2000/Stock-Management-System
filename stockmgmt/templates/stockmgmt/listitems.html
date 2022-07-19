@@ -1,4 +1,5 @@
 {% extends 'stockmgmt/base.html' %}
+{% load static %}
 
 {% block body %}
 
@@ -18,6 +19,7 @@
                 <th>Category</th>
                 <th>Item Name</th>
                 <th>Quantity</th>
+                <th>Delete</th>
             </tr>
         </thead>
 
@@ -27,6 +29,8 @@
                 <td>{{ instance.category }}</td>
                 <td><a href="{% url 'update_items' instance.id %}"> {{ instance.item_name }}</a></td>
                 <td>{{ instance.quantity }}</td>
+                <td><a href="{% url 'delete_items' instance.id %}"><img src="{% static 'img/trash.svg' %}" </a></td>
+
             </tr>
         {% endfor %}
     </table>
