@@ -3,6 +3,14 @@
 
 {% block body %}
 
+    {% if messages %}
+        <ul class="messages">
+            {% for message in messages %}
+                <li {% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+            {% endfor %}
+        </ul>
+    {% endif %}
+
     <h1>List of Items</h1>
     <br>
 
@@ -19,6 +27,8 @@
                 <th>Category</th>
                 <th>Item Name</th>
                 <th>Quantity</th>
+                <th>Timestamp</th>
+                <th>Last Updated</th>
                 <th>Delete</th>
             </tr>
         </thead>
@@ -28,7 +38,9 @@
                 <td>{{ forloop.counter }}</td>
                 <td>{{ instance.category }}</td>
                 <td><a href="{% url 'update_items' instance.id %}"> {{ instance.item_name }}</a></td>
-                <td>{{ instance.quantity }}</td>
+                <td><a href="{% url 'stock_detail' instance.id %}"> {{ instance.quantity }}</a></td>
+                <td>{{ instance.timestamp }}</td>
+                <td>{{ instance.last_updated }}</td>
                 <td><a href="{% url 'delete_items' instance.id %}"><img src="{% static 'img/trash.svg' %}" </a></td>
 
             </tr>

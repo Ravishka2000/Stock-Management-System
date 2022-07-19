@@ -7,7 +7,6 @@ class StockCreateForm(forms.ModelForm):
         model = Stock
         fields = ['category', 'item_name', 'quantity']
         widgets = {
-            'category': forms.TextInput(attrs={'class': 'form-control'}),
             'item_name': forms.TextInput(attrs={'class': 'form-control'}),
             'quantity': forms.NumberInput(attrs={'class': 'form-control'}),
         }
@@ -29,6 +28,8 @@ class StockCreateForm(forms.ModelForm):
 
 
 class StockSearchForm(forms.ModelForm):
+    export_to_CSV = forms.BooleanField(required=False)
+
     class Meta:
         model = Stock
         fields = ['category', 'item_name']
