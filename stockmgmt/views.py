@@ -3,7 +3,7 @@ from django.http import HttpResponse
 from django.contrib import messages
 import csv
 from .models import Stock
-from .forms import StockCreateForm, StockSearchForm, StockUpdateForm, IssueForm, ReceiveForm
+from .forms import StockCreateForm, StockSearchForm, StockUpdateForm, IssueForm, ReceiveForm, ReorderLevelForm
 
 
 def home(request):
@@ -130,3 +130,21 @@ def receive_items(request, pk):
         "username": 'Receive By: ' + str(request.user),
     }
     return render(request, 'stockmgmt/additems.html', context)
+
+
+def reorder_level(request, pk):
+    queryset = Stock.objects.get(id=pk)
+    form = ReorderLevelForm(request.POST or None, instance=queryset)
+    if form.is_valid():
+        instance = form.save(commit=False)
+        instance.save()
+        messages.success(request, "Reorder level for "
+                         + str(instance.item_name)
+                         + " is updated to "
+                         + str(instance.reorder_level))
+        return redirect("/listitems")
+    context = {
+        "instance": queryset,
+        "form": form,
+    }
+    return render(request, "stockmgmt/additems.html", context)
