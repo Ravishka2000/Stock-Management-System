@@ -4,7 +4,7 @@ from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 import csv
 from .models import Stock, StockHistory
-from .forms import StockCreateForm, StockSearchForm, StockUpdateForm, IssueForm, ReceiveForm, ReorderLevelForm
+from .forms import *
 
 
 def home(request):
@@ -12,7 +12,7 @@ def home(request):
     context = {
         "title": title,
     }
-    return render(request, 'stockmgmt/home.html', context)
+    return redirect('/listitems')
 
 
 @login_required
@@ -26,10 +26,13 @@ def list_items(request):
         "queryset": queryset,
     }
     if request.method == 'POST':
+
+        category = form['category'].value()
         queryset = Stock.objects.filter(
-            # category__icontains=form['category'].value(),
             item_name__icontains=form['item_name'].value()
         )
+        if category != '':
+            queryset = queryset.filter(category_id=category)
 
         if form['export_to_CSV'].value():
             response = HttpResponse(content_type='text/csv')
@@ -165,8 +168,37 @@ def reorder_level(request, pk):
 def list_history(request):
     header = "List of Items"
     queryset = StockHistory.objects.all()
+    form = StockHistorySearchForm(request.POST or None)
     context = {
         "title": header,
         "queryset": queryset,
+        "form": form,
     }
+    if request.method == 'POST':
+        category = form['category'].value()
+        queryset = StockHistory.objects.filter(
+            item_name__icontains=form['item_name'].value(),
+            last_updated__range=[
+                form['start_date'].value(),
+                form['end_date'].value(),
+            ]
+        )
+        if category != '':
+            queryset = queryset.filter(category_id=category)
+
+        if form['export_to_CSV'].value():
+            response = HttpResponse(content_type='text/csv')
+            response['Content-Disposition'] = 'attachment; filename="Stock History.csv"'
+            writer = csv.writer(response)
+            writer.writerow(['CATEGORY', 'ITEM NAME', 'QUANTITY', 'ISSUE QUANTITY', 'RECEIVE QUANTITY', 'LAST UPDATED'])
+            instance = queryset
+            for stock in instance:
+                writer.writerow([stock.category, stock.item_name, stock.quantity, stock.issue_quantity, stock.receive_quantity, stock.last_updated])
+            return response
+
+        context = {
+            "form": form,
+            "title": header,
+            "queryset": queryset,
+        }
     return render(request,'stockmgmt/listhistory.html', context)

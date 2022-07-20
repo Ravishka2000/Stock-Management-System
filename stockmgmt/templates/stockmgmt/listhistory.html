@@ -12,6 +12,13 @@
     {% endif %}
 
     <h1>List of Items</h1>
+    <br>
+
+    <form method="post" action="">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <input type="submit" value="Search" class="btn btn-secondary">
+    </form>
 
     <br><br>
 

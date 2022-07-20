@@ -75,6 +75,10 @@
                 color: white;
                 text-align: center;
             }
+
+            .mybutton {
+                width: 100%;
+            }
         </style>
     </head>
     <body>
@@ -90,17 +94,17 @@
                         <li class="nav-item">
                             <a class="nav-link active" aria-current="page" href="/">Home</a>
                         </li>
-                        {% if request.user.is_authenticated %}
-                        <li class="nav-item">
-                            <a class="nav-link" href="/listitems">List Items</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="/additems">Add Items</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="/listhistory">List History</a>
-                        </li>
-                        {% endif %}
+{#                        {% if request.user.is_authenticated %}#}
+{#                        <li class="nav-item">#}
+{#                            <a class="nav-link" href="/listitems">List Items</a>#}
+{#                        </li>#}
+{#                        <li class="nav-item">#}
+{#                            <a class="nav-link" href="/additems">Add Items</a>#}
+{#                        </li>#}
+{#                        <li class="nav-item">#}
+{#                            <a class="nav-link" href="/listhistory">List History</a>#}
+{#                        </li>#}
+{#                        {% endif %}#}
                     </ul>
                     <ul class="navbar-nav">
                         {% if request.user.is_authenticated %}
