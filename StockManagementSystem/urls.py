@@ -1,5 +1,5 @@
 from django.contrib import admin
-from django.urls import path
+from django.urls import path, include
 from stockmgmt import views
 
 
@@ -14,5 +14,6 @@ urlpatterns = [
     path('issueitems/<str:pk>/', views.issue_items, name='issue_items'),
     path('receiveitems/<str:pk>/', views.receive_items, name='receive_items'),
     path('reorderlevel/<str:pk>/', views.reorder_level, name='reorder_level'),
-
+    path('accounts/', include('registration.backends.default.urls')),
+    path('listhistory/', views.list_history, name='list_history'),
 ]

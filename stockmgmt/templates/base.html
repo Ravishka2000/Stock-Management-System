@@ -97,35 +97,22 @@
                         <li class="nav-item">
                             <a class="nav-link" href="/additems">Add Items</a>
                         </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="/listhistory">List History</a>
-                        </li>
                         {% endif %}
                     </ul>
-                    <ul class="navbar-nav">
-                        {% if request.user.is_authenticated %}
-                            <li>
-                                <a href="/accounts/logout">
-                                    <button class="btn btn-danger">{{ user }} | Logout</button>
-                                </a>
-                            </li>
-                        {% else %}
-                            <li>
-                                <a href="/accounts/login">
-                                    <button class="btn btn-primary">Login</button>
-                                </a>
-                            </li>
-                        {% endif %}
-                    </ul>
+                    <form class="d-flex" role="search">
+                        <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
+                        <button class="btn btn-outline-success" type="submit">Search</button>
+                    </form>
                 </div>
             </div>
         </nav>
 
         <main class="container">
             <div class="bg-light p-5 rounded">
+                {% block title %}
+                {% endblock %}
 
-                {% block body %}
-
+                {% block content %}
                 {% endblock %}
             </div>
         </main>

@@ -1,0 +1,44 @@
+{% extends 'stockmgmt/base.html' %}
+{% load static %}
+
+{% block body %}
+
+    {% if messages %}
+        <ul class="messages">
+            {% for message in messages %}
+                <li {% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+            {% endfor %}
+        </ul>
+    {% endif %}
+
+    <h1>List of Items</h1>
+
+    <br><br>
+
+    <table class="table table-striped table-hover" style="text-align: center;">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Category</th>
+                <th>Item Name</th>
+                <th>Quantity</th>
+                <th>Issue Quantity</th>
+                <th>Receive Quantity</th>
+                <th>Last Updated</th>
+            </tr>
+        </thead>
+
+        {% for instance in queryset %}
+            <tr>
+                <td>{{ forloop.counter }}</td>
+                <td>{{ instance.category }}</td>
+                <td>{{ instance.item_name }}</td>
+                <td>{{ instance.quantity }}</td>
+                <td>{{ instance.issue_quantity }}</td>
+                <td>{{ instance.receive_quantity }}</td>
+                <td>{{ instance.last_updated }}</td>
+            </tr>
+        {% endfor %}
+    </table>
+
+{% endblock %}
