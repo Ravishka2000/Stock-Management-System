@@ -1,4 +1,5 @@
 {% extends 'stockmgmt/base.html' %}
+{% load crispy_forms_tags %}
 
 {% block body %}
 
@@ -6,8 +7,9 @@
 
     <form method="post" action="" class="form-control">
         {% csrf_token %}
-        {{ form.as_p }}
-        <input type="submit" value="Add" class="btn btn-success">
+        {{ form|crispy }}
+        <br>
+        <input type="submit" value="{{ btn }}" class="btn btn-success">
     </form>
 
 

@@ -6,10 +6,6 @@ class StockCreateForm(forms.ModelForm):
     class Meta:
         model = Stock
         fields = ['category', 'item_name', 'quantity']
-        widgets = {
-            'item_name': forms.TextInput(attrs={'class': 'form-control'}),
-            'quantity': forms.NumberInput(attrs={'class': 'form-control'}),
-        }
 
     def clean_category(self):
         category = self.cleaned_data.get('category')
@@ -33,9 +29,6 @@ class StockSearchForm(forms.ModelForm):
     class Meta:
         model = Stock
         fields = ['category', 'item_name']
-        widgets = {
-            'item_name': forms.TextInput(attrs={'class': 'form-control'}),
-        }
 
 
 class StockHistorySearchForm(forms.ModelForm):
@@ -46,20 +39,12 @@ class StockHistorySearchForm(forms.ModelForm):
     class Meta:
         model = StockHistory
         fields = ['category', 'item_name', 'start_date', 'end_date']
-        widgets = {
-            'item_name': forms.TextInput(attrs={'class': 'form-control'}),
-        }
 
 
 class StockUpdateForm(forms.ModelForm):
     class Meta:
         model = Stock
         fields = ['category', 'item_name', 'quantity']
-        widgets = {
-            'category': forms.TextInput(attrs={'class': 'form-control'}),
-            'item_name': forms.TextInput(attrs={'class': 'form-control'}),
-            'quantity': forms.NumberInput(attrs={'class': 'form-control'}),
-        }
 
 
 class IssueForm(forms.ModelForm):

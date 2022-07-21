@@ -1,4 +1,5 @@
 {% extends 'stockmgmt/base.html' %}
+{% load crispy_forms_tags %}
 {% load static %}
 
 {% block body %}
@@ -18,7 +19,8 @@
         <div class="col-sm-2">
             <form method="post" action="">
                 {% csrf_token %}
-                {{ form.as_p }}
+                {{ form|crispy }}
+                <br>
                 <input type="submit" value="Search" class="btn btn-secondary mybutton">
             </form>
             <br><br><br>
@@ -59,7 +61,7 @@
                         </td>
                         <td><a href="{% url 'reorder_level' instance.id %}">{{ instance.reorder_level }}</a></td>
                         <td>{{ instance.last_updated }}</td>
-                        <td><a href="{% url 'delete_items' instance.id %}"><img src="{% static 'img/trash.svg' %}" </a></td>
+                        <td><a href="{% url 'delete_items' instance.id %}"><img src="{% static 'img/trash.svg' %}" alt=""></a></td>
 
                     </tr>
                 {% endfor %}

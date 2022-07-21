@@ -1,9 +1,10 @@
-from django.shortcuts import render, redirect
-from django.http import HttpResponse
+import csv
+
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
-import csv
-from .models import Stock, StockHistory
+from django.http import HttpResponse
+from django.shortcuts import render, redirect
+
 from .forms import *
 
 
@@ -61,6 +62,7 @@ def add_items(request):
     context = {
         "form": form,
         "title": "Add Item",
+        "btn": "Add"
     }
     return render(request, 'stockmgmt/additems.html', context)
 
@@ -78,6 +80,7 @@ def update_items(request, pk):
     context = {
         'form': form,
         "title": "Update Item",
+        "btn": "Update",
     }
     return render(request, 'stockmgmt/additems.html', context)
 
@@ -111,15 +114,20 @@ def issue_items(request, pk):
         instance.receive_quantity = 0
         instance.quantity -= instance.issue_quantity
         instance.issue_by = str(request.user)
-        messages.success(request, "Issued Successfully. " + str(instance.quantity) + " " + str(instance.item_name) + "s now left in Store")
+        messages.success(request, "Issued Successfully. "
+                         + str(instance.quantity)
+                         + " "
+                         + str(instance.item_name)
+                         + "s now left in Store"
+                         )
         instance.save()
         return redirect('/stockdetail/' + str(instance.id))
-        # return HttpResponseRedirect(instance.get_absolute_url())
     context = {
         "title": 'Issue ' + str(queryset.item_name),
         "queryset": queryset,
         "form": form,
         "username": 'Issue By: ' + str(request.user),
+        "btn": "Issue",
     }
     return render(request, 'stockmgmt/additems.html', context)
 
@@ -133,14 +141,19 @@ def receive_items(request, pk):
         instance.issue_quantity = 0
         instance.quantity += instance.receive_quantity
         instance.save()
-        messages.success(request, "Received Successfully. " + str(instance.quantity) + " " + str(instance.item_name) + "s now now in Store")
+        messages.success(request, "Received Successfully. "
+                         + str(instance.quantity)
+                         + " "
+                         + str(instance.item_name)
+                         + "s now now in Store"
+                         )
         return redirect('/stockdetail/' + str(instance.id))
-        # return HttpResponseRedirect(instance.get_absolute_url())
     context = {
         "title": 'Receive ' + str(queryset.item_name),
         "queryset": queryset,
         "form": form,
         "username": 'Receive By: ' + str(request.user),
+        "btn": "Receive",
     }
     return render(request, 'stockmgmt/additems.html', context)
 
@@ -158,15 +171,17 @@ def reorder_level(request, pk):
                          + str(instance.reorder_level))
         return redirect("/listitems")
     context = {
+        "title": "Set ROL",
         "instance": queryset,
         "form": form,
+        "btn": "Set"
     }
     return render(request, "stockmgmt/additems.html", context)
 
 
 @login_required
 def list_history(request):
-    header = "List of Items"
+    header = "History of Items"
     queryset = StockHistory.objects.all()
     form = StockHistorySearchForm(request.POST or None)
     context = {
@@ -176,13 +191,18 @@ def list_history(request):
     }
     if request.method == 'POST':
         category = form['category'].value()
+        start = form['start_date'].value()
+        end = form['end_date'].value()
         queryset = StockHistory.objects.filter(
-            item_name__icontains=form['item_name'].value(),
-            last_updated__range=[
-                form['start_date'].value(),
-                form['end_date'].value(),
-            ]
-        )
+            item_name__icontains=form['item_name'].value())
+
+        if start != '' and end != '':
+            queryset = StockHistory.objects.filter(
+                last_updated__range=[
+                    start,
+                    end,
+                ])
+
         if category != '':
             queryset = queryset.filter(category_id=category)
 
@@ -190,10 +210,19 @@ def list_history(request):
             response = HttpResponse(content_type='text/csv')
             response['Content-Disposition'] = 'attachment; filename="Stock History.csv"'
             writer = csv.writer(response)
-            writer.writerow(['CATEGORY', 'ITEM NAME', 'QUANTITY', 'ISSUE QUANTITY', 'RECEIVE QUANTITY', 'LAST UPDATED'])
+            writer.writerow(
+                ['CATEGORY', 'ITEM NAME', 'QUANTITY', 'ISSUE QUANTITY', 'RECEIVE QUANTITY', 'LAST UPDATED']
+            )
             instance = queryset
             for stock in instance:
-                writer.writerow([stock.category, stock.item_name, stock.quantity, stock.issue_quantity, stock.receive_quantity, stock.last_updated])
+                writer.writerow(
+                    [stock.category,
+                     stock.item_name,
+                     stock.quantity,
+                     stock.issue_quantity,
+                     stock.receive_quantity,
+                     stock.last_updated]
+                )
             return response
 
         context = {
@@ -201,4 +230,4 @@ def list_history(request):
             "title": header,
             "queryset": queryset,
         }
-    return render(request,'stockmgmt/listhistory.html', context)
+    return render(request, 'stockmgmt/listhistory.html', context)
